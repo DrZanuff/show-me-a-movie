@@ -1,13 +1,17 @@
 import {
   promptHeaderEnUS,
-  promptHeaderPtBR,
   promptModelEnUS,
-  promptModelPtBR,
   promptMoreQuestionsHeaderEnUS,
-  promptMoreQuestionsHeaderPtBR,
   promptMoreQuestionsContextEnUS,
+  promptMovieDetailsEnUS,
+} from '@/languages/enUS/prompts'
+import {
+  promptHeaderPtBR,
+  promptModelPtBR,
+  promptMoreQuestionsHeaderPtBR,
   promptMoreQuestionsContextPtBR,
-} from '@/languages/prompts'
+  promptMovieDetailsPtBR,
+} from '@/languages/ptBR/prompts'
 
 export type SupportedLanguages = 'en-US' | 'pt-BR'
 
@@ -50,10 +54,13 @@ export const translationKeys: Translations = {
     'prompt-header': promptHeaderEnUS,
     'prompt-more-questions-header': promptMoreQuestionsHeaderEnUS,
     'prompt-more-questions-context': promptMoreQuestionsContextEnUS,
+    'prompt-more-details': promptMovieDetailsEnUS,
     // UI
     'submit-button-text': 'Submit',
     'load-more-questions': 'Generate more questions',
     'load-more-suggestions': 'More suggestions',
+    'button-close': 'Close',
+    'new-search-button': 'New search',
     // ERRORS
     'something-wrong': 'Something went wrong... try again.',
   },
@@ -89,10 +96,13 @@ export const translationKeys: Translations = {
     'prompt-header': promptHeaderPtBR,
     'prompt-more-questions-header': promptMoreQuestionsHeaderPtBR,
     'prompt-more-questions-context': promptMoreQuestionsContextPtBR,
+    'prompt-more-details': promptMovieDetailsPtBR,
     // UI
     'submit-button-text': 'Enviar',
     'load-more-questions': 'Gerar mais perguntas',
     'load-more-suggestions': 'Mais sugestões',
+    'button-close': 'Fechar',
+    'new-search-button': 'Nova busca',
     // ERRORS
     'something-wrong': 'Algo de errado aconteceu... tente novamente.',
   },

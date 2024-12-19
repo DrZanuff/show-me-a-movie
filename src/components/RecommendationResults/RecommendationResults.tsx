@@ -1,18 +1,19 @@
 import { useState, useCallback } from 'react'
 import { RecommendationButtons } from '@/components/RecommendationButtons'
 import { useTranslation } from 'react-i18next'
-import { LoadingButton } from '@mui/lab'
+import LoadingButton from '@mui/lab/LoadingButton'
+import Button from '@mui/material/Button'
 import { generateRequestMoviePrompt } from '@/helpers/generateRequestMoviePrompt'
 import { SupportedLanguages } from '@/languages/languages'
-import type { RecommendationResultsProps } from './RecommendationResults.types'
 import { useAtomValue } from 'jotai'
 import { likedItemsAtom, dislikedItemsAtom } from '@/atoms/recommendationAtoms'
-
-import './RecommendationResults-styles.css'
 import { generateQuestionsAsText } from '@/helpers/generateQuestionsAsText'
 import { model } from '@/services/geminiApi'
 import toast from 'react-hot-toast'
 import { extractResultObject } from '@/helpers/extractResultObject'
+import { RecommendationDetails } from '@/components/RecommendationDetails'
+import type { RecommendationResultsProps } from './RecommendationResults.types'
+import './RecommendationResults-styles.css'
 
 export function RecommendationResults({
   recommendation,
@@ -21,9 +22,12 @@ export function RecommendationResults({
 }: RecommendationResultsProps) {
   const { t, i18n } = useTranslation()
   const lang = i18n.language as SupportedLanguages
-  const [isLoading, setIsLoading] = useState(false)
   const likedItems = useAtomValue(likedItemsAtom)
   const dislikedItems = useAtomValue(dislikedItemsAtom)
+  const [isLoading, setIsLoading] = useState(false)
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false)
+  const [currentTitle, setCurrentTitle] = useState('')
+  const [currentTitleDetails, setCurrentTitleDetails] = useState('')
 
   const handleLoadMore = useCallback(async () => {
     setIsLoading(true)
@@ -60,6 +64,18 @@ export function RecommendationResults({
     setIsLoading(false)
   }, [dislikedItems, lang, likedItems, questionList, setRecommendation, t])
 
+  const handleCloseDetails = () => {
+    setIsDetailsOpen(false)
+  }
+
+  const handleOpenDetails = () => {
+    setIsDetailsOpen(true)
+  }
+
+  const handleRefresh = () => {
+    window.location.reload()
+  }
+
   return (
     <div className={'RecommendationResults-container'}>
       <h1>{recommendation.title}</h1>
@@ -67,7 +83,14 @@ export function RecommendationResults({
         className={`RecommendationResults-list ${isLoading ? 'disabled' : ''}`}>
         {recommendation.options.map((rec, idx) => (
           <li key={rec + '-' + idx}>
-            <RecommendationButtons title={rec} />
+            <RecommendationButtons
+              title={rec}
+              handleOpenDetails={handleOpenDetails}
+              setCurrentTitleDetails={setCurrentTitleDetails}
+              setCurrentTitle={setCurrentTitle}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+            />
           </li>
         ))}
       </ul>
@@ -78,6 +101,21 @@ export function RecommendationResults({
         loading={isLoading}>
         {t('load-more-suggestions')}
       </LoadingButton>
+
+      <Button
+        variant="contained"
+        disabled={isLoading}
+        color="secondary"
+        onClick={handleRefresh}>
+        {t('new-search-button')}
+      </Button>
+
+      <RecommendationDetails
+        title={currentTitle}
+        isOpen={isDetailsOpen}
+        content={currentTitleDetails}
+        handleClose={handleCloseDetails}
+      />
     </div>
   )
 }
