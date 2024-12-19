@@ -41,7 +41,7 @@ Observe as seguintes perguntas, onde eu respondo e você tentará descobrir o me
 Com base nas minhas respostas, sugira um filme e uma série de TV para mim. Eu já tenho as seguintes perguntas:`
 
 export const promptMoreQuestionsContextPtBR = `
-Não repita minhas perguntas, mas crie novas. Gere para mim no seguinte padrão (quero 10 perguntas):
+Não repita minhas perguntas, mas crie novas. Gere para mim no seguinte padrão (quero 3 perguntas):
 
 Exemplo 1 (gere 3 perguntas):
 <object>
