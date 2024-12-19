@@ -1,4 +1,5 @@
-import { AnsweredFieldQuestion } from '@/components/App/App.types'
+/* eslint-disable no-extra-boolean-cast */
+import { AnsweredFieldQuestion } from '@/components/QuestionForm/QuestionForm.types'
 import { SupportedLanguages, translationKeys } from '@/languages/languages'
 
 type MoviePromptProps = {

@@ -1,3 +1,14 @@
+import {
+  promptHeaderEnUS,
+  promptHeaderPtBR,
+  promptModelEnUS,
+  promptModelPtBR,
+  promptMoreQuestionsHeaderEnUS,
+  promptMoreQuestionsHeaderPtBR,
+  promptMoreQuestionsContextEnUS,
+  promptMoreQuestionsContextPtBR,
+} from '@/languages/prompts'
+
 export type SupportedLanguages = 'en-US' | 'pt-BR'
 
 type Translations = {
@@ -35,38 +46,15 @@ export const translationKeys: Translations = {
     'exclude-movies-prompt':
       "Movies you should not recommend because I've already saw it:",
     // PROMPT
-    'prompt-model': `
-Based on my answers, respond with 3 recommendations including the names of the works. They can be movies or series. If there’s nothing similar, suggest works that contain some similar elements.
-I donzw't need any extra descriptions, only the names of the works. I want only three options.
-I want only the names of the works. The format of the response I expect from you is as follows:
-
-Example 1: 
-<recommendation>
-{
-  "title": "Fantasy Movie for Families",
-  "options": [
-    "Movie 1",
-    "Movie 2",
-    "Series 1"
-  ]
-}
-</recommendation>
-
-Example 2:
-<recommendation>
-{
-  "title": "Action Movie +18",
-  "options": [
-    "Movie 1",
-    "Movie 2",
-    "Movie 3",
-  ]
-}
-</recommendation>
-    `,
-    'prompt-header': `
-Observe the following questions, where I answer and you'll try to discover my mood and what kind of movie or tv series I would probably like to watch.
-Based on my answers , suggest a movie a TV serie for me:`,
+    'prompt-model': promptModelEnUS,
+    'prompt-header': promptHeaderEnUS,
+    'prompt-more-questions-header': promptMoreQuestionsHeaderEnUS,
+    'prompt-more-questions-context': promptMoreQuestionsContextEnUS,
+    // UI
+    'submit-button-text': 'Submit',
+    'load-more-questions': 'Generate more questions',
+    // ERRORS
+    'something-wrong': 'Something went wrong... try again.',
   },
   'pt-BR': {
     // DEFAULT QUESTION
@@ -96,37 +84,14 @@ Based on my answers , suggest a movie a TV serie for me:`,
     'exclude-movies-prompt':
       'Filmes que você não deve recomendar porque eu já vi:',
     // PROMPT
-    'prompt-model': `
-"Me indique uma obra que seja de drama que aborde depressão e dificuldades na vida. Me responda com 3 indicações com o nome das obras. Pode ser filmes ou séries. Se não tiver algo parecido faça algumas sugestão de obras que possuem algum elemento parecido.
-Não preciso de descrição extra, somente o nome da obra. Eu quero somente três opções.
-Eu quero somente o nome das obras. O formato da resposta que eu espero de você é do seguinte modelo:
-
-Exemplo 1:
-<recommendation>
-{
-  "title": "Filme de Fantasia para familia",
-  "options": [
-    "Filme 1",
-    "Filme 2",
-    "Série 1"
-  ]
-}
-</recommendation>
-
-Exemplo 2:
-<recommendation>
-{
-  "title": "Filme de ação +18",
-  "options": [
-    "Filme 1",
-    "Filme 2",
-    "Filme 3",
-  ]
-}
-</recommendation>
-    `,
-    'prompt-header': `
-    Observe the following questions, where I answer and you'll try to discover my mood and what kind of movie or tv series I would probably like to watch.
-    Based on my answers , suggest a movie a TV serie for me:`,
+    'prompt-model': promptModelPtBR,
+    'prompt-header': promptHeaderPtBR,
+    'prompt-more-questions-header': promptMoreQuestionsHeaderPtBR,
+    'prompt-more-questions-context': promptMoreQuestionsContextPtBR,
+    // UI
+    'submit-button-text': 'Enviar',
+    'load-more-questions': 'Gerar mais perguntas',
+    // ERRORS
+    'something-wrong': 'Algo de errado aconteceu... tente novamente.',
   },
 }

@@ -1,5 +1,5 @@
-export function extractRecommendationObject(input: string) {
-  const match = input.match(/<recommendation>([\s\S]*?)<\/recommendation>/)
+export function extractResultObject(input: string) {
+  const match = input.match(/<object>([\s\S]*?)<\/object>/)
 
   if (match) {
     const jsonString = match[1].trim() // Extract the content and trim any whitespace
@@ -10,7 +10,7 @@ export function extractRecommendationObject(input: string) {
       return null
     }
   } else {
-    console.error('No recommendation tag found.', { input })
+    console.error('No object tag found.', { input })
     return null
   }
 }

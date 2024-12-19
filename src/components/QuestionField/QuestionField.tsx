@@ -8,6 +8,7 @@ export function QuestionField({
   required,
   placeholder,
   text,
+  ...rest
 }: QuestionFieldProps) {
   return (
     <div className={'QuestionField-container'}>
@@ -19,6 +20,7 @@ export function QuestionField({
         placeholder={placeholder ?? ''}
         size="small"
         required={required}
+        {...rest}
       />
     </div>
   )

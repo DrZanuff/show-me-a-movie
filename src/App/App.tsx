@@ -8,14 +8,12 @@ import type { FieldQuestion, Recommendation, CurrentView } from './App.types'
 import './App-styles.css'
 
 export function App() {
-  const { t, i18n } = useTranslation()
+  const { i18n } = useTranslation()
   const [currentView, setCurrentView] = useState<CurrentView>('Form')
   const [recommendation, setRecommendation] = useState<Recommendation>()
   const [questions, setQuestions] = useState<FieldQuestion[]>(
     generateInitialQuestions(i18n.language as SupportedLanguages)
   )
-
-  console.log('DBG: APP', { recommendation, currentView })
 
   return (
     <div className={'App-container'}>

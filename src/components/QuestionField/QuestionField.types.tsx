@@ -1,4 +1,7 @@
-export interface QuestionFieldProps {
+import type { TextFieldProps } from '@mui/material/TextField'
+
+export interface QuestionFieldProps
+  extends Omit<TextFieldProps, 'value' | 'onChange'> {
   id: string
   name: string
   text: string
