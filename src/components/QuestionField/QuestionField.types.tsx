@@ -1,3 +1,7 @@
 export interface QuestionFieldProps {
-  value?: string
+  id: string
+  name: string
+  text: string
+  placeholder?: string
+  required: boolean
 }

@@ -5,8 +5,6 @@ import shuffle from 'lodash/shuffle'
 export function generateInitialQuestions(
   lang: SupportedLanguages
 ): FieldQuestion[] {
-  console.log('DBG:', { lang })
-
   const firstQuestion: FieldQuestion = {
     text: translationKeys[lang]['default-question'],
     placeholder: translationKeys[lang]['default-question-placeholder'],

@@ -1,10 +1,18 @@
-import type { AppProps, FieldQuestion } from './App.types'
 import './App-styles.css'
 import TextField from '@mui/material/TextField'
 import { useState } from 'react'
-import { useTranslation, use } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { generateInitialQuestions } from '@/helpers/generateInitialQuestions'
+import { QuestionField } from '@/components/QuestionField'
+import get from 'lodash/get'
 import type { SupportedLanguages } from '@/languages/languages'
+import type {
+  AppProps,
+  FieldQuestion,
+  AnsweredFieldQuestion,
+} from './App.types'
+import { generateQuestionsAsText } from '@/helpers/generateQuestionsAsText'
+import { generateRequestMoviePrompt } from '@/helpers/generateRequestMoviePrompt'
 
 export function App({ value }: AppProps) {
   const { t, i18n } = useTranslation()
@@ -15,68 +23,51 @@ export function App({ value }: AppProps) {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
 
-    // Get the current values directly from event.target
     const formData = event.currentTarget as HTMLFormElement
 
-    console.log('DBG:', { formData })
+    const questionList: AnsweredFieldQuestion[] = []
 
-    // for (let i = 0; i < questions.length; i++) {
-    //   const questionId = 'question' + (i + 1)
+    for (let i = 0; i < questions.length; i++) {
+      const questionId = `question-${i}`
+      const question = questions[i]
+      const answer = get(formData, `${questionId}.value`)
 
-    //   const questionText = formData?.[questionId]?.value
-    //   const option1 = formData?.[questionId + '-option1']?.value
-    //   const option2 = formData?.[questionId + '-option2']?.value
-    //   const option3 = formData?.[questionId + '-option3']?.value
-    //   const option4 = formData?.[questionId + '-option4']?.value
-    //   const correctQuestion =
-    //     formData?.[questionId + '-correctOption' + (i + 1)]?.value
+      if (answer) {
+        questionList.push({
+          text: question.text,
+          answer,
+        })
+      }
+    }
 
-    //   questionList.push({
-    //     text: questionText,
-    //     correctQuestion,
-    //     options: [
-    //       { text: option1 },
-    //       { text: option2 },
-    //       { text: option3 },
-    //       { text: option4 },
-    //     ],
-    //   })
-    // }
+    const questionsAsText = generateQuestionsAsText(questionList)
+    const prompt = generateRequestMoviePrompt(
+      i18n.language as SupportedLanguages,
+      {
+        questionText: questionsAsText,
+      }
+    )
 
-    // const username = (form.elements.namedItem('username') as HTMLInputElement).value;
-    // const email = (form.elements.namedItem('email') as HTMLInputElement).value;
-
-    // console.log('Form submitted with:', { username, email });
-
-    // You can perform any API call or other operations here
+    console.log('DBG::', { prompt, questionsAsText, questionList })
   }
 
   return (
     <div className={'App-container'}>
       <form onSubmit={handleSubmit}>
-        {/* {questions.map( question => <input></input>)} */}
+        {questions.map((question, idx) => {
+          const fieldId = `question-${idx}`
 
-        <div>
-          <label htmlFor="username">Username</label>
-          <input
-            id="username"
-            name="username" // Use the name attribute to access the field via form.elements
-            type="text"
-            defaultValue="" // Set initial value
-            required
-          />
-        </div>
-
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            name="email" // Use the name attribute to access the field via form.elements
-            type="email"
-            defaultValue="" // Set initial value
-            required
-          />
-        </div>
+          return (
+            <QuestionField
+              key={fieldId}
+              id={fieldId}
+              name={fieldId}
+              required={idx === 0}
+              text={question.text}
+              placeholder={question.placeholder}
+            />
+          )
+        })}
 
         <button type="submit">Submit</button>
       </form>
