@@ -15,4 +15,5 @@ export interface QuestionFormProps {
   setQuestions: (param: FieldQuestion[]) => void
   setCurrentView: (param: CurrentView) => void
   setRecommendation: (param: Recommendation) => void
+  setAnsweredQuestionList: (param: AnsweredFieldQuestion[]) => void
 }

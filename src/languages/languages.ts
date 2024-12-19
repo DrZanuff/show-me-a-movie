@@ -44,7 +44,7 @@ export const translationKeys: Translations = {
     'disliked-movies-prompt': "Movies I don't like:",
     'liked-movies-prompt': 'Movies I like:',
     'exclude-movies-prompt':
-      "Movies you should not recommend because I've already saw it:",
+      "Movies you should not recommend because I don't like it:",
     // PROMPT
     'prompt-model': promptModelEnUS,
     'prompt-header': promptHeaderEnUS,
@@ -53,6 +53,7 @@ export const translationKeys: Translations = {
     // UI
     'submit-button-text': 'Submit',
     'load-more-questions': 'Generate more questions',
+    'load-more-suggestions': 'More suggestions',
     // ERRORS
     'something-wrong': 'Something went wrong... try again.',
   },
@@ -82,7 +83,7 @@ export const translationKeys: Translations = {
     // INCLUSION EXCLUSINON LIST
     'liked-movies-prompt': 'Filmes que eu gosto:',
     'exclude-movies-prompt':
-      'Filmes que você não deve recomendar porque eu já vi:',
+      'Filmes que você não deve recomendar porque eu não gostei:',
     // PROMPT
     'prompt-model': promptModelPtBR,
     'prompt-header': promptHeaderPtBR,
@@ -91,6 +92,7 @@ export const translationKeys: Translations = {
     // UI
     'submit-button-text': 'Enviar',
     'load-more-questions': 'Gerar mais perguntas',
+    'load-more-suggestions': 'Mais sugestões',
     // ERRORS
     'something-wrong': 'Algo de errado aconteceu... tente novamente.',
   },
