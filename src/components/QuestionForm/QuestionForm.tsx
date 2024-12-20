@@ -128,24 +128,26 @@ export function QuestionForm({
           )
         })}
 
-        <Button
-          variant="contained"
-          size="small"
-          loading={isLoading}
-          onClick={handleLoadMoreQuestions}
-          sx={{ mb: '10px' }}
-          color="secondary">
-          {t('load-more-questions')}
-        </Button>
+        <div className="Buttons-container">
+          <Button
+            variant="contained"
+            size="small"
+            loading={isLoading}
+            onClick={handleLoadMoreQuestions}
+            sx={{ mb: '10px' }}
+            color="secondary">
+            {t('load-more-questions')}
+          </Button>
 
-        <Button
-          type="submit"
-          variant="contained"
-          size="small"
-          fullWidth
-          loading={isLoading}>
-          {t('submit-button-text')}
-        </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            size="small"
+            fullWidth
+            loading={isLoading}>
+            {t('submit-button-text')}
+          </Button>
+        </div>
       </form>
     </div>
   )

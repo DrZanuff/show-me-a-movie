@@ -9,9 +9,21 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import { Toaster } from 'react-hot-toast'
 
+import { ThemeProvider, createTheme } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+})
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
-    <Toaster />
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <App />
+      <Toaster />
+    </ThemeProvider>
   </StrictMode>
 )

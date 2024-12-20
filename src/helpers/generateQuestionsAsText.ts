@@ -1,4 +1,4 @@
-import type { AnsweredFieldQuestion } from '@/components/App/App.types'
+import { AnsweredFieldQuestion } from '@/components/QuestionForm/QuestionForm.types'
 
 export function generateQuestionsAsText(
   questions: AnsweredFieldQuestion[]

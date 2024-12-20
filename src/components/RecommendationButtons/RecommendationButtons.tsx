@@ -10,6 +10,8 @@ import { useTranslation } from 'react-i18next'
 import { generateDetailsPrompt } from '@/helpers/generateDetailsPrompt'
 import { model } from '@/services/geminiApi'
 import toast from 'react-hot-toast'
+import CardContent from '@mui/material/CardContent'
+import Card from '@mui/material/Card'
 import { sanitizeHTML } from '@/helpers/sanitizeHTML'
 import './RecommendationButtons-styles.css'
 import type { RecommendationButtonsProps } from './RecommendationButtons.types'
@@ -86,31 +88,35 @@ export function RecommendationButtons({
   ])
 
   return (
-    <div className={'RecommendationButtons-container'}>
-      <span>{title}</span>
-      <div className="RecommendationButtons-container-buttons">
-        <Button
-          variant={isDisliked ? 'outlined' : 'contained'}
-          color="error"
-          disabled={isLoading}
-          onClick={handleDislike}>
-          <ThumbDownIcon />
-        </Button>
-        <Button
-          variant={isLiked ? 'outlined' : 'contained'}
-          disabled={isLoading}
-          onClick={handleLike}>
-          <ThumbUpIcon />
-        </Button>
-        <LoadingButton
-          variant="contained"
-          color="secondary"
-          loading={false}
-          disabled={isLoading}
-          onClick={handleShowDetails}>
-          <VisibilityIcon />
-        </LoadingButton>
-      </div>
-    </div>
+    <Card elevation={7}>
+      <CardContent>
+        <div className={'RecommendationButtons-container'}>
+          <h2>{title}</h2>
+          <div className="RecommendationButtons-container-buttons">
+            <Button
+              variant={isDisliked ? 'outlined' : 'contained'}
+              color="error"
+              disabled={isLoading}
+              onClick={handleDislike}>
+              <ThumbDownIcon />
+            </Button>
+            <Button
+              variant={isLiked ? 'outlined' : 'contained'}
+              disabled={isLoading}
+              onClick={handleLike}>
+              <ThumbUpIcon />
+            </Button>
+            <LoadingButton
+              variant="contained"
+              color="secondary"
+              loading={false}
+              disabled={isLoading}
+              onClick={handleShowDetails}>
+              <VisibilityIcon />
+            </LoadingButton>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   )
 }
