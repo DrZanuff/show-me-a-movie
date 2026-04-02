@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp'
 import ThumbDownIcon from '@mui/icons-material/ThumbDown'
 import VisibilityIcon from '@mui/icons-material/Visibility'
@@ -8,8 +8,7 @@ import { useAtom } from 'jotai'
 import { likedItemsAtom, dislikedItemsAtom } from '@/atoms/recommendationAtoms'
 import { useTranslation } from 'react-i18next'
 import { generateDetailsPrompt } from '@/helpers/generateDetailsPrompt'
-import { model } from '@/services/geminiApi'
-import toast from 'react-hot-toast'
+import { generateContentWithRetry } from '@/services/geminiApi'
 import CardContent from '@mui/material/CardContent'
 import Card from '@mui/material/Card'
 import { sanitizeHTML } from '@/helpers/sanitizeHTML'
@@ -17,6 +16,7 @@ import './RecommendationButtons-styles.css'
 import type { RecommendationButtonsProps } from './RecommendationButtons.types'
 import type { SupportedLanguages } from '@/languages/languages'
 import { extractHTMLContent } from '@/helpers/extractHTMLContent'
+import { ApiErrorModal } from '@/components/ApiErrorModal/ApiErrorModal'
 
 export function RecommendationButtons({
   title,
@@ -28,8 +28,9 @@ export function RecommendationButtons({
 }: RecommendationButtonsProps) {
   const [likedItems, updateLikedItems] = useAtom(likedItemsAtom)
   const [dislikedItems, updateDislikedItems] = useAtom(dislikedItemsAtom)
-  const { t, i18n } = useTranslation()
+  const { i18n } = useTranslation()
   const lang = i18n.language as SupportedLanguages
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false)
 
   const isLiked = useMemo(() => {
     return likedItems.includes(title)
@@ -53,11 +54,12 @@ export function RecommendationButtons({
 
     const prompt = generateDetailsPrompt(lang, title)
 
-    const result = await model.generateContent(prompt)
-
-    if (!result?.response) {
-      toast.error(`${t('something-wrong')} - Code: 4xA`)
-      console.error('ERROR:', { result })
+    let result
+    try {
+      result = await generateContentWithRetry(prompt)
+    } catch (error) {
+      console.error('ERROR:', { error })
+      setIsErrorModalOpen(true)
       setIsLoading(false)
       return
     }
@@ -83,7 +85,6 @@ export function RecommendationButtons({
     setCurrentTitle,
     setCurrentTitleDetails,
     setIsLoading,
-    t,
     title,
   ])
 
@@ -117,6 +118,10 @@ export function RecommendationButtons({
           </div>
         </div>
       </CardContent>
+      <ApiErrorModal
+        open={isErrorModalOpen}
+        onClose={() => setIsErrorModalOpen(false)}
+      />
     </Card>
   )
 }

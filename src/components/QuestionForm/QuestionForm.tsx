@@ -6,10 +6,10 @@ import type { SupportedLanguages } from '@/languages/languages'
 import { generateQuestionsAsText } from '@/helpers/generateQuestionsAsText'
 import { generateRequestMoviePrompt } from '@/helpers/generateRequestMoviePrompt'
 import { generateMoreQuestionsPrompt } from '@/helpers/generateMoreQuestionsPrompt'
-import { model } from '@/services/geminiApi'
+import { generateContentWithRetry } from '@/services/geminiApi'
 import { extractResultObject } from '@/helpers/extractResultObject'
 import Button from '@mui/lab/LoadingButton'
-import toast from 'react-hot-toast'
+import { ApiErrorModal } from '@/components/ApiErrorModal/ApiErrorModal'
 import type {
   QuestionFormProps,
   AnsweredFieldQuestion,
@@ -26,6 +26,7 @@ export function QuestionForm({
   const { t, i18n } = useTranslation()
   const lang = i18n.language as SupportedLanguages
   const [isLoading, setIsLoading] = useState(false)
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false)
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent) => {
@@ -53,11 +54,12 @@ export function QuestionForm({
         questionText: questionsAsText,
       })
 
-      const result = await model.generateContent(prompt)
-
-      if (!result?.response) {
-        toast.error(`${t('something-wrong')} - Code: 1xA`)
-        console.error('ERROR:', { result })
+      let result
+      try {
+        result = await generateContentWithRetry(prompt)
+      } catch (error) {
+        console.error('ERROR:', { error })
+        setIsErrorModalOpen(true)
         setIsLoading(false)
         return
       }
@@ -67,8 +69,8 @@ export function QuestionForm({
       const suggestion = extractResultObject(resultText)
 
       if (!suggestion) {
-        toast.error(`${t('something-wrong')} - Code: 1xB`)
         console.error('ERROR:', { suggestion, resultText })
+        setIsErrorModalOpen(true)
         setIsLoading(false)
         return
       }
@@ -83,10 +85,12 @@ export function QuestionForm({
   const handleLoadMoreQuestions = useCallback(async () => {
     setIsLoading(true)
     const prompt = generateMoreQuestionsPrompt(lang, { questions })
-    const result = await model.generateContent(prompt)
-
-    if (!result?.response) {
-      toast.error(`${t('something-wrong')} - Code: 2xA`)
+    let result
+    try {
+      result = await generateContentWithRetry(prompt)
+    } catch (error) {
+      console.error('ERROR:', { error })
+      setIsErrorModalOpen(true)
       setIsLoading(false)
       return
     }
@@ -98,8 +102,8 @@ export function QuestionForm({
     )
 
     if (!newQuestions) {
-      toast.error(`${t('something-wrong')} - Code: 2xB`)
       console.error('ERROR:', { newQuestions, resultText })
+      setIsErrorModalOpen(true)
       setIsLoading(false)
       return
     }
@@ -107,7 +111,7 @@ export function QuestionForm({
     setQuestions([...questions, ...newQuestions])
 
     setIsLoading(false)
-  }, [lang, questions, setQuestions, t])
+  }, [lang, questions, setQuestions])
 
   return (
     <div className={'QuestionForm-container'}>
@@ -149,6 +153,10 @@ export function QuestionForm({
           </Button>
         </div>
       </form>
+      <ApiErrorModal
+        open={isErrorModalOpen}
+        onClose={() => setIsErrorModalOpen(false)}
+      />
     </div>
   )
 }

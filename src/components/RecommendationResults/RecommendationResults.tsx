@@ -8,10 +8,10 @@ import { SupportedLanguages } from '@/languages/languages'
 import { useAtomValue } from 'jotai'
 import { likedItemsAtom, dislikedItemsAtom } from '@/atoms/recommendationAtoms'
 import { generateQuestionsAsText } from '@/helpers/generateQuestionsAsText'
-import { model } from '@/services/geminiApi'
-import toast from 'react-hot-toast'
+import { generateContentWithRetry } from '@/services/geminiApi'
 import { extractResultObject } from '@/helpers/extractResultObject'
 import { RecommendationDetails } from '@/components/RecommendationDetails'
+import { ApiErrorModal } from '@/components/ApiErrorModal/ApiErrorModal'
 import type { RecommendationResultsProps } from './RecommendationResults.types'
 import './RecommendationResults-styles.css'
 
@@ -28,6 +28,7 @@ export function RecommendationResults({
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const [currentTitle, setCurrentTitle] = useState('')
   const [currentTitleDetails, setCurrentTitleDetails] = useState('')
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false)
 
   const handleLoadMore = useCallback(async () => {
     setIsLoading(true)
@@ -40,11 +41,12 @@ export function RecommendationResults({
       likedMovies: likedItems,
     })
 
-    const result = await model.generateContent(prompt)
-
-    if (!result?.response) {
-      toast.error(`${t('something-wrong')} - Code: 3xA`)
-      console.error('ERROR:', { result })
+    let result
+    try {
+      result = await generateContentWithRetry(prompt)
+    } catch (error) {
+      console.error('ERROR:', { error })
+      setIsErrorModalOpen(true)
       setIsLoading(false)
       return
     }
@@ -54,15 +56,15 @@ export function RecommendationResults({
     const suggestion = extractResultObject(resultText)
 
     if (!suggestion) {
-      toast.error(`${t('something-wrong')} - Code: 3xB`)
       console.error('ERROR:', { suggestion, resultText })
+      setIsErrorModalOpen(true)
       setIsLoading(false)
       return
     }
 
     setRecommendation(suggestion)
     setIsLoading(false)
-  }, [dislikedItems, lang, likedItems, questionList, setRecommendation, t])
+  }, [dislikedItems, lang, likedItems, questionList, setRecommendation])
 
   const handleCloseDetails = () => {
     setIsDetailsOpen(false)
@@ -115,6 +117,10 @@ export function RecommendationResults({
         isOpen={isDetailsOpen}
         content={currentTitleDetails}
         handleClose={handleCloseDetails}
+      />
+      <ApiErrorModal
+        open={isErrorModalOpen}
+        onClose={() => setIsErrorModalOpen(false)}
       />
     </div>
   )
